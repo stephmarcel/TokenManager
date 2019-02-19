@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Pete's Pet Shop</title>
+    <title>Token Manager</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -18,37 +18,64 @@
     <![endif]-->
   </head>
   <body>
-    <div class="container">
+    <div class="container" style="width: 650px;">
       <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">Pete's Pet Shop</h1>
+        <div class="col-lg-12">
+          <h1 class="text-center">TOKEN MANAGER</h1>
+
           <hr/>
-          <br/>
-        </div>
-      </div>
+          <form id="formReload" onSubmit="App.render(); return false;" class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal"
+                        data-target="#generateAccountModal">Are you a Consultant?</button>
+                 <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal"
+                        data-target="#generateAccountModal">Are you a Manager?</button>
+              </form>
+              <hr/>
+              <div class="modal fade" id="generateAccountModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Generate Account</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form id="formModal">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label" for="passwordfield">Password</label>
+                          <div class="col-sm-6">
+                            <input type="password" id="passwordfield" class="form-control validate" placeholder="Password">
+                          </div>
+                          <button type="button" class="btn btn-primary" onclick="App.generateAccount();">Generate</button>
+                        </div>
 
-      <div id="petsRow" class="row">
-        <!-- PETS LOAD HERE -->
-      </div>
-    </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="publicKey">Public Key</label>
+                            <div class="col-sm-9">
+                               <input type="text" id="publicKey" class="form-control validate" placeholder="Public Key" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="privateKey">Private Key</label>
+                            <div class="col-sm-9">
+                               <input type="text" id="privateKey" class="form-control validate" placeholder="Private Key" readonly>
+                            </div>
+                        </div>
 
-    <div id="petTemplate" style="display: none;">
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="panel panel-default panel-pet">
-          <div class="panel-heading">
-            <h3 class="panel-title">Scrappy</h3>
-          </div>
-          <div class="panel-body">
-            <img alt="140x140" data-src="holder.js/140x140" class="img-rounded img-center" style="width: 100%;" src="https://animalso.com/wp-content/uploads/2017/01/Golden-Retriever_6.jpg" data-holder-rendered="true">
-            <br/><br/>
-            <strong>Breed</strong>: <span class="pet-breed">Golden Retriever</span><br/>
-            <strong>Age</strong>: <span class="pet-age">3</span><br/>
-            <strong>Location</strong>: <span class="pet-location">Warren, MI</span><br/><br/>
-            <button class="btn btn-default btn-adopt" type="button" data-id="0">Adopt</button>
-          </div>
-        </div>
-      </div>
-    </div>
+
+                      </form>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="App.gotoVoteForm();">Close</button>
+                    </div>
+                  </div>
+                </div>
+                </div>
+
+
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
