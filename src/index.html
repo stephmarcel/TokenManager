@@ -24,57 +24,128 @@
           <h1 class="text-center">TOKEN MANAGER</h1>
 
           <hr/>
-          <form id="formReload" onSubmit="App.render(); return false;" class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal"
-                        data-target="#generateAccountModal">Are you a Consultant?</button>
-                 <button type="submit" class="btn btn-primary btn-lg" data-toggle="modal"
-                        data-target="#generateAccountModal">Are you a Manager?</button>
-              </form>
-              <hr/>
-              <div class="modal fade" id="generateAccountModal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title">Generate Account</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <form id="formModal">
-                        <div class="form-group row">
-                          <label class="col-sm-3 col-form-label" for="passwordfield">Password</label>
-                          <div class="col-sm-6">
-                            <input type="password" id="passwordfield" class="form-control validate" placeholder="Password">
+          <div id="loader">
+            <p id="accountAddress" class="text-center"></p>
+            <p id="accountPosition" class="text-center"></p>
+          </div>
+          <div id="balanceInfo">
+            <p id="accountBalance" class="text-center">
+              <h3  class="text-center">  Balance  </h3><br/>
+              <h1  class="text-center"> 10 A$ </h1>
+            </p>
+            <form id="formBtn" class="text-center">
+              <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#receiveToken">Receive</button>
+              <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#sendToken">Send</button>
+            </form>
+
+            <form id="formReceiveToken">
+              <div class="form-group row">
+                  <label class="col-sm-3 col-form-label" for="addressFrom">Address from</label>
+                  <div class="col-sm-9">
+                     <input type="text" id="addressFrom" class="form-control validate" placeholder="Address">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-sm-3 col-form-label" for="nbToken">Amount</label>
+                  <div class="col-sm-9">
+                     <input type="text" id="nbToken" class="form-control validate" placeholder="Amount">
+                  </div>
+              </div>
+              <div class="text-right">
+                <button type="reset" class="btn btn-primary">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="App.receiveToken();">Receive</button>
+              </div>
+            </form>
+
+            <form id="formSendToken">
+              <div class="form-group row">
+                  <label class="col-sm-3 col-form-label" for="addressFrom">Recipient address</label>
+                  <div class="col-sm-9">
+                     <input type="text" id="addressFrom" class="form-control validate" placeholder="Address">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-sm-3 col-form-label" for="nbToken">Amount</label>
+                  <div class="col-sm-9">
+                     <input type="text" id="nbToken" class="form-control validate" placeholder="Amount">
+                  </div>
+              </div>
+              <div class="text-right">
+                <button type="reset" class="btn btn-primary">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="App.sendToken();">Send</button>
+              </div>
+            </form>
+
+
+
+            <!-- <div class="modal fade" id="receiveToken" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Generate Account</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="formReceiveToken">
+                      <div class="form-group row">
+                          <label class="col-sm-3 col-form-label" for="addressFrom"></label>
+                          <div class="col-sm-9">
+                             <input type="text" id="addressFrom" class="form-control validate" placeholder="Address">
                           </div>
-                          <button type="button" class="btn btn-primary" onclick="App.generateAccount();">Generate</button>
-                        </div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="publicKey">Public Key</label>
-                            <div class="col-sm-9">
-                               <input type="text" id="publicKey" class="form-control validate" placeholder="Public Key" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-3 col-form-label" for="privateKey">Private Key</label>
-                            <div class="col-sm-9">
-                               <input type="text" id="privateKey" class="form-control validate" placeholder="Private Key" readonly>
-                            </div>
-                        </div>
-
-
-                      </form>
-                    </div>
-
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="App.gotoVoteForm();">Close</button>
-                    </div>
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-sm-3 col-form-label" for="nbToken">Amount</label>
+                          <div class="col-sm-9">
+                             <input type="text" id="nbToken" class="form-control validate" placeholder="Amount">
+                          </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Receive</button>
                   </div>
                 </div>
-                </div>
+              </div>
+              </div> -->
 
+          </div>
 
+              <form id="formGenerateAccount" class="text-center">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="passwordfield">Password</label>
+                    <div class="col-sm-6">
+                      <select class="form-control" id="positionSelect">
+                        <option>Consultant</option>
+                        <option>Manager</option>
+                     </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="App.generateAccount();">Generate</button>
+                  </div>
+
+                  <div class="form-group row">
+                      <label class="col-sm-3 col-form-label" for="publicKey">Public Key</label>
+                      <div class="col-sm-9">
+                         <input type="text" id="publicKey" class="form-control validate" placeholder="Public Key" readonly>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label class="col-sm-3 col-form-label" for="privateKey">Private Key</label>
+                      <div class="col-sm-9">
+                         <textarea type="text" id="privateKey" class="form-control validate" placeholder="Private Key" readonly></textarea>
+                      </div>
+                  </div>
+                  <div class="text-right">
+                    <button type="reset" class="btn btn-primary">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="App.reloadForm();">Submit</button>
+                  </div>
+              </form>
+                <hr/>
+            </div>
+          </div>
+        </div>
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

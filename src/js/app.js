@@ -4,7 +4,12 @@ App = {
   account: '0x0',
 
   init: function() {
+    $("#loader").hide();
+    $("#balanceInfo").hide();
+    $("#formReceiveToken").hide();
+    $("#formSendToken").hide();
     return App.initWeb3();
+
   },
 
   initWeb3: function() {
@@ -21,26 +26,29 @@ App = {
   },
 
   initContract: function() {
-    $.getJSON("Election.json", function(election) {
-      // Instantiate a new truffle contract from the artifact
-      App.contracts.Election = TruffleContract(election);
+     $.getJSON("AmaCoin.json", function(amacoin) {
+       // Instantiate a new truffle contract from the artifact
+       App.contracts.AmaCoin = TruffleContract(amacoin);
       // Connect provider to interact with contract
-      App.contracts.Election.setProvider(App.web3Provider);
+      App.contracts.AmaCoin.setProvider(App.web3Provider);
+      $("#loader").hide();
+      $("#balanceInfo").hide();
+      $("#formReceiveToken").hide();
+      $("#formSendToken").hide();
+     //  App.listenForEvents();
 
-      App.listenForEvents();
-
-      return App.render();
-    });
+    //  return App.render();
+     });
   },
 
   render: function() {
-    var electionInstance;
-    var totalVote = 0;
-    var loader = $("#loader");
-    var content = $("#content");
+    var amacoinInstance;
 
-    loader.show();
-    content.hide();
+    var loader = $("#loader");
+    var balanceInfo = $("#balanceInfo");
+
+    loader.hide();
+    balanceInfo.hide();
 
     // Load account data
     if (App.account == '0x0') {
@@ -53,9 +61,9 @@ App = {
   }
 
     // Load contract data
-    App.contracts.Election.deployed().then(function(instance) {
-      electionInstance = instance;
-      return electionInstance.candidatesCount();
+    App.contracts.AmaCoin.deployed().then(function(instance) {
+      amacoinInstance = instance;
+      return amacoinInstance.candidatesCount();
     }).then(function(candidatesCount) {
       var candidatesResults = $("#candidatesResults");
       candidatesResults.empty();
@@ -63,21 +71,8 @@ App = {
       var candidatesSelect = $('#candidatesSelect');
       candidatesSelect.empty();
 
-      for (var i = 1; i <= candidatesCount; i++) {
-        electionInstance.candidates(i).then(function(candidate) {
-          var id = candidate[0];
-          var name = candidate[1];
-          var voteCount = candidate[2];
-          totalVote = totalVote + parseInt(voteCount);
-          // Render candidate Result
-          var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-          candidatesResults.append(candidateTemplate);
 
-          var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-        candidatesSelect.append(candidateOption);
-        });
-      }
-      return electionInstance.voters(App.account);
+      return amacoinInstance.voters(App.account);
     }).then(function(hasVoted) {
       // Do not allow a user to voted
       if (hasVoted) {
@@ -95,142 +90,88 @@ App = {
     });
   },
 
-  castVote: function() {
-    var candidateId = $('#candidatesSelect').val();
-    App.contracts.Election.deployed().then(function(instance) {
-      return instance.vote(candidateId, { from: App.account });
-    }).then(function(result) {
-      // Wait for votes to update
-      $("#content").hide();
-      $("#loader").show();
-    }).catch(function(err) {
-      console.error(err);
-    });
-  },
+  // castVote: function() {
+  //   var candidateId = $('#candidatesSelect').val();
+  //   App.contracts.AmaCoin.deployed().then(function(instance) {
+  //     return instance.vote(candidateId, { from: App.account });
+  //   }).then(function(result) {
+  //     // Wait for votes to update
+  //     $("#content").hide();
+  //     $("#loader").show();
+  //   }).catch(function(err) {
+  //     console.error(err);
+  //   });
+  // },
 
-  getListVote: function() {
-    App.contracts.Election.deployed().then(function(instance) {
-      electionInstance = instance;
-      return electionInstance.votesCount();
-    }).then(function(votesCount) {
-      var votesResults = $("#votesResults");
-      votesResults.empty();
-      for (var i = 1; i <= votesCount; i++) {
-        electionInstance.votes(i).then(function(vote) {
-          var id = vote[0];
-          var address = vote[1];
-          var candidateId = vote[2];
-          // Render vote Result
-          var voteTemplate = "<tr><th>" + id + "</th><td>" + address + "</td><td>" + candidateId + "</td></tr>"
-          votesResults.append(voteTemplate);
-
-        });
-      }
-    });
-  },
 
   listenForEvents: function() {
-  App.contracts.Election.deployed().then(function(instance) {
+  App.contracts.AmaCoin.deployed().then(function(instance) {
     instance.votedEvent({}, {
       fromBlock: 0,
       toBlock: 'latest'
     }).watch(function(error, event) {
-      console.log("event triggered", event)
+      console.log("event triggered", event);
       // Reload when a new vote is recorded
       App.render();
     });
   });
 },
 
-gotoVoteForm: function(){
-  App.account =  $("#addressfield").val();
-    $("#accountAddress").html("Your Account: " + res);
-    $("#generateAccountModal").modal('dispose');
-    $("#generateAccountModal").modal('hide');
+castVote: function() {
+  // var candidateId = $('#candidatesSelect').val();
+  // App.contracts.AmaCoin.deployed().then(function(instance) {
+  //   return instance.vote(candidateId, { from: App.account });
+  // }).then(function(result) {
+  //   // Wait for votes to update
+  //   $("#content").hide();
+  //   $("#loader").show();
+  // }).catch(function(err) {
+  //   console.error(err);
+  // });
+
+},
+
+sendToken: function(){
+  // var from =
+  // var to =
+  // var nbToken =
+  // App.contracts.AmaCoin.deployed().then(function(instance){
+  //   return instance.transferFrom(from, to, nbToken);
+  // }).then(function(result){
+  //   alert('Envoi de token effectué avec succès');
+  // }).catch(function(err) {
+  //   console.error(err);
+  // });
+  alert('Fonctionnalité en cours de paramétrage');
+},
+reloadForm: function(){
+  window.location.reload();
+},
+receiveToken: function(){
+  // var from =
+  // var to =
+  // var nbToken =
+  // App.contracts.AmaCoin.deployed().then(function(instance){
+  //   return instance.transferFrom(from, to, nbToken);
+  // }).then(function(result){
+  //   alert('Réception de token effectuée avec succès');
+  // }).catch(function(err) {
+  //   console.error(err);
+  // });
+  alert('Fonctionnalité en cours de paramétrage');
 },
 
 generateAccount: function(){
 
-var electionInstance;
-var password = $("#passwordfield").val();
-var addressGen = document.getElementById('addressfield');
-var from = web3.eth.accounts[0];
-    web3.personal.newAccount(password, function(err, res) {
-      if (err == null) {
-        App.account = res;
-        console.log("error: "+err);
-        console.log("res: "+res);
-        console.log("App.account: "+ App.account);
-        console.log("from:"+ from);
-
-addressGen.value = res;
-        // Unlock account
-        web3.personal.unlockAccount(res, password, 1600);
-
-        //Transfer 10 ether to the new generate account
-        web3.eth.sendTransaction({
-          from: from,
-          to: res,
-          value: web3.toWei(10)
-        },password);
-
-          console.log("Balance du compte dest:"+res+"-"+ web3.fromWei(web3.eth.getBalance(res)));
-          console.log("Balance du compte exp:"+ from +"-"+web3.fromWei(web3.eth.getBalance(from)));
-
-
-        $("#accountAddress").html("Your Account: " + res);
-
-        // Refresh page
-        App.account = res;
-        App.contracts.Election.deployed().then(function(instance) {
-          electionInstance = instance;
-          return electionInstance.candidatesCount();
-        }).then(function(candidatesCount) {
-          var candidatesResults = $("#candidatesResults");
-          candidatesResults.empty();
-
-          var candidatesSelect = $('#candidatesSelect');
-          candidatesSelect.empty();
-
-          for (var i = 1; i <= candidatesCount; i++) {
-            electionInstance.candidates(i).then(function(candidate) {
-              var id = candidate[0];
-              var name = candidate[1];
-              var voteCount = candidate[2];
-
-              // Render candidate Result
-              var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-              candidatesResults.append(candidateTemplate);
-
-              var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-            candidatesSelect.append(candidateOption);
-            });
-          }
-          return electionInstance.voters(res);
-        }).then(function(hasVoted) {
-          // Do not allow a user to voted
-          if (hasVoted) {
-            //$('form').hide();
-            $("#formVote").hide();
-            }
-        else {
-          $("#formVote").show();
-            }
-          loader.hide();
-          content.show();
-        }).catch(function(error) {
-          console.warn(error);
-        });
-      }
-});
-
+    var amacoinInstance;
+    //var password = $("#passwordfield").val();
+    var publicKey = document.getElementById('publicKey');
+    var privateKey = document.getElementById('privateKey');
+    var addr = web3.eth.accounts.create();
+    publicKey.value = addr.address;
+    privateKey.value = addr.privateKey;
 
   },
-
-
-  addCandidate: function() {
-
-  }
 };
 
 $(function() {
