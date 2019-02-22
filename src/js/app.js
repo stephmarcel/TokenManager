@@ -2,11 +2,12 @@ App = {
   web3Provider: null,
   contracts: {},
   account: '0x0',
+  position: '',
 
   init: function() {
     $("#loader").hide();
     $("#balanceInfo").hide();
-    $("#formReceiveToken").hide();
+    $("#formReceive").hide();
     $("#formSendToken").hide();
     return App.initWeb3();
 
@@ -22,6 +23,7 @@ App = {
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
       web3 = new Web3(App.web3Provider);
   //  }
+
     return App.initContract();
   },
 
@@ -31,77 +33,26 @@ App = {
        App.contracts.AmaCoin = TruffleContract(amacoin);
       // Connect provider to interact with contract
       App.contracts.AmaCoin.setProvider(App.web3Provider);
+    //  var cpt = web3.eth.getAccounts();
+      App.getFirstAccount();
+      //App.account = web3.eth.accounts[0];
       $("#loader").hide();
       $("#balanceInfo").hide();
-      $("#formReceiveToken").hide();
-      $("#formSendToken").hide();
+      $("#formReceive").hide();
+      $("#formSend").hide();
      //  App.listenForEvents();
 
     //  return App.render();
      });
   },
 
-  render: function() {
-    var amacoinInstance;
-
-    var loader = $("#loader");
-    var balanceInfo = $("#balanceInfo");
-
-    loader.hide();
-    balanceInfo.hide();
-
-    // Load account data
-    if (App.account == '0x0') {
-      web3.eth.getCoinbase(function(err, account) {
-        if (err === null) {
-          App.account = account;
-          $("#accountAddress").html("Your Account: " + account);
-        }
-      });
-  }
-
-    // Load contract data
-    App.contracts.AmaCoin.deployed().then(function(instance) {
-      amacoinInstance = instance;
-      return amacoinInstance.candidatesCount();
-    }).then(function(candidatesCount) {
-      var candidatesResults = $("#candidatesResults");
-      candidatesResults.empty();
-
-      var candidatesSelect = $('#candidatesSelect');
-      candidatesSelect.empty();
-
-
-      return amacoinInstance.voters(App.account);
-    }).then(function(hasVoted) {
-      // Do not allow a user to voted
-      if (hasVoted) {
-        //$('form').hide();
-        $("#formVote").hide();
-        }
-    else {
-      $("#formVote").show();
-        }
-      loader.hide();
-      content.show();
-        $("#NbTotalVote").html("Total Vote: " + totalVote);
-    }).catch(function(error) {
-      console.warn(error);
+  getFirstAccount: function(){
+    web3.eth.getAccounts().then(function(accounts){
+      App.account = accounts[0];
+      console.log();
     });
   },
 
-  // castVote: function() {
-  //   var candidateId = $('#candidatesSelect').val();
-  //   App.contracts.AmaCoin.deployed().then(function(instance) {
-  //     return instance.vote(candidateId, { from: App.account });
-  //   }).then(function(result) {
-  //     // Wait for votes to update
-  //     $("#content").hide();
-  //     $("#loader").show();
-  //   }).catch(function(err) {
-  //     console.error(err);
-  //   });
-  // },
 
 
   listenForEvents: function() {
@@ -117,20 +68,6 @@ App = {
   });
 },
 
-castVote: function() {
-  // var candidateId = $('#candidatesSelect').val();
-  // App.contracts.AmaCoin.deployed().then(function(instance) {
-  //   return instance.vote(candidateId, { from: App.account });
-  // }).then(function(result) {
-  //   // Wait for votes to update
-  //   $("#content").hide();
-  //   $("#loader").show();
-  // }).catch(function(err) {
-  //   console.error(err);
-  // });
-
-},
-
 sendToken: function(){
   // var from =
   // var to =
@@ -144,21 +81,65 @@ sendToken: function(){
   // });
   alert('Fonctionnalité en cours de paramétrage');
 },
-reloadForm: function(){
-  window.location.reload();
+
+openformReceive: function(){
+  $("#loader").hide();
+  $("#balanceInfo").hide();
+  $("#formSend").hide();
+  var addFrom = document.getElementById('addressFrom');
+  addFrom.value = publicKey.value;
+  $("#formReceive").show();
 },
+
+openformSend: function(){
+  $("#formGenerateAccount").hide();
+
+  // $("#accountAddress").html("Your ID: " + publicKey.value);
+  // $("#accountPosition").html("Your position: " + App.position);
+  // $("#accountBalance").html("<h3  class='text-center'>  Balance  </h3><br/>  <h1  class='text-center'> 10 A$  </h1>");
+  $("#loader").hide();
+  $("#balanceInfo").hide();
+  $("#formReceive").hide();
+  $("#formSend").show();
+},
+
+getInfoBalance: function(){
+      var position = $('#positionSelect').val();
+      App.position = position;
+      var bal;
+
+      var publicKey = document.getElementById('publicKey');
+      var privateKey = document.getElementById('privateKey');
+      //publicKey.value = addr.address;
+      //privateKey.value = addr.privateKey;
+      App.contracts.AmaCoin.deployed().then(function(instance){
+        return instance.balanceOf(publicKey.value);
+      }).then(function(balance){
+        bal = parseInt(balance);
+      }).catch(function(err) {
+        console.error(err);
+      });
+      $("#formGenerateAccount").hide();
+
+      $("#accountAddress").html("Your ID: " + publicKey.value);
+      $("#accountPosition").html("Your position: " + position);
+      $("#accountBalance").html("<h3  class='text-center'>  Balance  </h3><br/>  <h1  class='text-center'>"+ bal +" A$  </h1>");
+      $("#loader").show();
+      $("#balanceInfo").show();
+},
+
 receiveToken: function(){
-  // var from =
-  // var to =
-  // var nbToken =
-  // App.contracts.AmaCoin.deployed().then(function(instance){
-  //   return instance.transferFrom(from, to, nbToken);
-  // }).then(function(result){
-  //   alert('Réception de token effectuée avec succès');
-  // }).catch(function(err) {
-  //   console.error(err);
-  // });
-  alert('Fonctionnalité en cours de paramétrage');
+  //var from = document.getElementById('addressFrom').value;
+  var to = document.getElementById('addressFrom').value;  //publicKey.value;
+  var nbToken = parseInt(document.getElementById('nbTokenR').value);
+  App.contracts.AmaCoin.deployed().then(function(instance){
+    return instance.transfer(to, nbToken);
+  }).then(function(result){
+    alert('Réception de token effectuée avec succès');
+  }).catch(function(err) {
+    console.error(err);
+  });
+  //alert('Fonctionnalité en cours de paramétrage');
 },
 
 generateAccount: function(){
@@ -167,6 +148,7 @@ generateAccount: function(){
     //var password = $("#passwordfield").val();
     var publicKey = document.getElementById('publicKey');
     var privateKey = document.getElementById('privateKey');
+    App.account = web3.eth.accounts[0];
     var addr = web3.eth.accounts.create();
     publicKey.value = addr.address;
     privateKey.value = addr.privateKey;

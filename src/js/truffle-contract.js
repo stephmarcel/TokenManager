@@ -15,12 +15,12 @@ var contract = (function(module) {
 
   // Planned for future features, logging, etc.
   function Provider(provider) {
-    this.provider = provider;
+    this.provider = provider.currentProvider;
   }
 
-  Provider.prototype.send = function() {
-    return this.provider.send.apply(this.provider, arguments);
-  };
+  // Provider.prototype.send = function() {
+  //   return this.provider.send.apply(this.provider, arguments);
+  // };
 
   Provider.prototype.sendAsync = function() {
     return this.provider.sendAsync.apply(this.provider, arguments);
@@ -485,7 +485,8 @@ var contract = (function(module) {
           }
         }
 
-        self.web3.version.getNetwork(function(err, result) {
+      //  self.web3.version.getNetwork(function(err, result) {
+      self.web3.eth.net.getId(function(err, result) {
           if (err) return reject(err);
 
           var network_id = result.toString();

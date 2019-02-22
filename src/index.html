@@ -29,26 +29,24 @@
             <p id="accountPosition" class="text-center"></p>
           </div>
           <div id="balanceInfo">
-            <p id="accountBalance" class="text-center">
-              <h3  class="text-center">  Balance  </h3><br/>
-              <h1  class="text-center"> 10 A$ </h1>
-            </p>
+            <p id="accountBalance" class="text-center">  </p>
             <form id="formBtn" class="text-center">
-              <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#receiveToken">Receive</button>
-              <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#sendToken">Send</button>
+              <button type="button" class="btn btn-primary" onclick="App.openformReceive();" >Receive</button>
+              <button type="button" class="btn btn-primary" onclick="App.openformSend();">Send</button>
             </form>
-
-            <form id="formReceiveToken">
+          </div>
+          <div>
+            <form id="formReceive">
               <div class="form-group row">
-                  <label class="col-sm-3 col-form-label" for="addressFrom">Address from</label>
+                  <label class="col-sm-3 col-form-label" for="addressFrom">Address</label>
                   <div class="col-sm-9">
-                     <input type="text" id="addressFrom" class="form-control validate" placeholder="Address">
+                     <input type="text" id="addressFrom" readonly class="form-control validate">
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-sm-3 col-form-label" for="nbToken">Amount</label>
+                  <label class="col-sm-3 col-form-label" for="nbTokenR">Amount</label>
                   <div class="col-sm-9">
-                     <input type="text" id="nbToken" class="form-control validate" placeholder="Amount">
+                     <input type="text" id="nbTokenR" class="form-control validate" placeholder="Amount">
                   </div>
               </div>
               <div class="text-right">
@@ -56,18 +54,25 @@
                 <button type="button" class="btn btn-primary" onclick="App.receiveToken();">Receive</button>
               </div>
             </form>
-
-            <form id="formSendToken">
+          </div>
+          <div>
+            <form id="formSend">
               <div class="form-group row">
-                  <label class="col-sm-3 col-form-label" for="addressFrom">Recipient address</label>
+                  <label class="col-sm-3 col-form-label" for="addressFrom">Address</label>
                   <div class="col-sm-9">
                      <input type="text" id="addressFrom" class="form-control validate" placeholder="Address">
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-sm-3 col-form-label" for="nbToken">Amount</label>
+                  <label class="col-sm-3 col-form-label" for="nbTokenS">Amount</label>
                   <div class="col-sm-9">
-                     <input type="text" id="nbToken" class="form-control validate" placeholder="Amount">
+                     <input type="text" id="nbTokenS" class="form-control validate" placeholder="Amount">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-sm-3 col-form-label" for="pKey">Private Key</label>
+                  <div class="col-sm-9">
+                     <textarea type="text" id="pKey" class="form-control validate" placeholder="Private Key"></textarea>
                   </div>
               </div>
               <div class="text-right">
@@ -75,7 +80,7 @@
                 <button type="button" class="btn btn-primary" onclick="App.sendToken();">Send</button>
               </div>
             </form>
-
+          </div>
 
 
             <!-- <div class="modal fade" id="receiveToken" tabindex="-1" role="dialog" aria-hidden="true">
@@ -111,7 +116,7 @@
               </div>
               </div> -->
 
-          </div>
+
 
               <form id="formGenerateAccount" class="text-center">
                   <div class="form-group row">
@@ -139,7 +144,7 @@
                   </div>
                   <div class="text-right">
                     <button type="reset" class="btn btn-primary">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="App.reloadForm();">Submit</button>
+                    <button type="button" class="btn btn-primary" onclick="App.getInfoBalance();">Submit</button>
                   </div>
               </form>
                 <hr/>
