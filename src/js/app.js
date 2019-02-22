@@ -3,6 +3,7 @@ App = {
   contracts: {},
   account: '0x0',
   position: '',
+  pwd:'',
 
   init: function() {
     $("#loader").hide();
@@ -34,8 +35,8 @@ App = {
       // Connect provider to interact with contract
       App.contracts.AmaCoin.setProvider(App.web3Provider);
     //  var cpt = web3.eth.getAccounts();
-      App.getFirstAccount();
-      //App.account = web3.eth.accounts[0];
+    //  App.getFirstAccount();
+      App.account = web3.eth.accounts[0];
       $("#loader").hide();
       $("#balanceInfo").hide();
       $("#formReceive").hide();
@@ -46,12 +47,12 @@ App = {
      });
   },
 
-  getFirstAccount: function(){
-    web3.eth.getAccounts().then(function(accounts){
-      App.account = accounts[0];
-      console.log();
-    });
-  },
+  // getFirstAccount: function(){
+  //   web3.eth.getAccounts().then(function(accounts){
+  //     App.account = accounts[0];
+  //     console.log();
+  //   });
+  // },
 
 
 
@@ -69,6 +70,25 @@ App = {
 },
 
 sendToken: function(){
+
+  var pass = $("#passwordsnd").val();
+  if (pass == App.pwd) {
+    var to = $("#addressTo").val();
+    var from = publicKey.value;
+    var nbToken = $("#nbTokenS").val();
+    web3.personal.unlockAccount(from, pass, 1600);
+    App.contracts.AmaCoin.deployed().then(function(instance){
+      return instance.transfer( to, parseInt(nbToken), { from: from });
+    }).then(function(result){
+      alert('Transfert de token effectuée avec succès vers ' + to);
+      App.getInfoBalance();
+    }).catch(function(err) {
+      console.error(err);
+    });
+  }
+else {
+  alert('Password Invalid!!');
+}
   // var from =
   // var to =
   // var nbToken =
@@ -79,7 +99,7 @@ sendToken: function(){
   // }).catch(function(err) {
   //   console.error(err);
   // });
-  alert('Fonctionnalité en cours de paramétrage');
+//  alert('Fonctionnalité en cours de paramétrage');
 },
 
 openformReceive: function(){
@@ -116,26 +136,30 @@ getInfoBalance: function(){
         return instance.balanceOf(publicKey.value);
       }).then(function(balance){
         bal = parseInt(balance);
+        $("#accountBalance").html("<h3  class='text-center'>  Balance  </h3><br/>  <h1  class='text-center'>"+ bal +" A$  </h1><br/>");
       }).catch(function(err) {
         console.error(err);
       });
       $("#formGenerateAccount").hide();
+      $("#formReceive").hide();
+      $("#formSend").hide();
 
       $("#accountAddress").html("Your ID: " + publicKey.value);
       $("#accountPosition").html("Your position: " + position);
-      $("#accountBalance").html("<h3  class='text-center'>  Balance  </h3><br/>  <h1  class='text-center'>"+ bal +" A$  </h1>");
+
       $("#loader").show();
       $("#balanceInfo").show();
 },
 
 receiveToken: function(){
-  //var from = document.getElementById('addressFrom').value;
-  var to = document.getElementById('addressFrom').value;  //publicKey.value;
-  var nbToken = parseInt(document.getElementById('nbTokenR').value);
+  var from = App.account;
+  var to = publicKey.value;
+  //var nbToken = parseInt(document.getElementById('nbTokenR').value);
   App.contracts.AmaCoin.deployed().then(function(instance){
-    return instance.transfer(to, nbToken);
+    return instance.transfer(to, 100,{ from: from });
   }).then(function(result){
-    alert('Réception de token effectuée avec succès');
+    alert('Réception de token effectuée avec succès de ' + App.account);
+    App.getInfoBalance();
   }).catch(function(err) {
     console.error(err);
   });
@@ -145,13 +169,45 @@ receiveToken: function(){
 generateAccount: function(){
 
     var amacoinInstance;
+    var addr;
     //var password = $("#passwordfield").val();
+    var password = $("#passwordfield").val();
     var publicKey = document.getElementById('publicKey');
-    var privateKey = document.getElementById('privateKey');
-    App.account = web3.eth.accounts[0];
-    var addr = web3.eth.accounts.create();
-    publicKey.value = addr.address;
-    privateKey.value = addr.privateKey;
+    App.pwd = password;
+    if (password != null && password != '') {
+      addr = web3.personal.newAccount(password);
+      web3.personal.unlockAccount(addr, password, 1600);
+        //Transfer 10 ether to the new generate account
+        web3.eth.sendTransaction({
+          from: App.account,
+          to: addr,
+          value: web3.toWei(10)
+        },password);
+      $("#btnSub").prop('disabled', false);
+      publicKey.value = addr;
+      alert('Your account has been successfuly created!');
+    }
+    else {
+      alert('Please, enter your password!');
+    }
+
+    // web3.personal.newAccount(password, function(err, res) {
+    //       if (err == null) {
+    //         //App.account = res;
+    //         console.log("error: "+err);
+    //         console.log("res: "+res);
+    //         //console.log("App.account: "+ App.account);
+    //         console.log("from:"+ from);
+    //
+
+
+
+
+  //  var privateKey = document.getElementById('privateKey');
+    // App.account = web3.eth.accounts[0];
+    //var addr = web3.eth.accounts.create();
+    //publicKey.value = addr.address;
+    //privateKey.value = addr.privateKey;
 
   },
 };

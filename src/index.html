@@ -31,12 +31,12 @@
           <div id="balanceInfo">
             <p id="accountBalance" class="text-center">  </p>
             <form id="formBtn" class="text-center">
-              <button type="button" class="btn btn-primary" onclick="App.openformReceive();" >Receive</button>
+              <button type="button" class="btn btn-primary" onclick="App.receiveToken();" >Receive</button>
               <button type="button" class="btn btn-primary" onclick="App.openformSend();">Send</button>
             </form>
           </div>
           <div>
-            <form id="formReceive">
+            <form id="formReceive" disabled>
               <div class="form-group row">
                   <label class="col-sm-3 col-form-label" for="addressFrom">Address</label>
                   <div class="col-sm-9">
@@ -58,9 +58,9 @@
           <div>
             <form id="formSend">
               <div class="form-group row">
-                  <label class="col-sm-3 col-form-label" for="addressFrom">Address</label>
+                  <label class="col-sm-3 col-form-label" for="addressTo">Address</label>
                   <div class="col-sm-9">
-                     <input type="text" id="addressFrom" class="form-control validate" placeholder="Address">
+                     <input type="text" id="addressTo" class="form-control validate" placeholder="Address">
                   </div>
               </div>
               <div class="form-group row">
@@ -70,10 +70,10 @@
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-sm-3 col-form-label" for="pKey">Private Key</label>
-                  <div class="col-sm-9">
-                     <textarea type="text" id="pKey" class="form-control validate" placeholder="Private Key"></textarea>
-                  </div>
+                <label class="col-sm-3 col-form-label" for="passwordsnd">Password</label>
+                <div class="col-sm-9">
+                   <input type="password" id="passwordsnd" class="form-control validate" placeholder="Password">
+                </div>
               </div>
               <div class="text-right">
                 <button type="reset" class="btn btn-primary">Cancel</button>
@@ -119,32 +119,33 @@
 
 
               <form id="formGenerateAccount" class="text-center">
+
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label" for="positionSelect">Position</label>
+                  <div class="col-sm-9">
+                    <select class="form-control" id="positionSelect">
+                      <option>Consultant</option>
+                      <option>Manager</option>
+                   </select>
+                </div>
+              </div>
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="passwordfield">Password</label>
-                    <div class="col-sm-6">
-                      <select class="form-control" id="positionSelect">
-                        <option>Consultant</option>
-                        <option>Manager</option>
-                     </select>
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="App.generateAccount();">Generate</button>
+                     <label class="col-sm-3 col-form-label" for="passwordfield">Password</label>
+                     <div class="col-sm-6">
+                        <input type="password" id="passwordfield" class="form-control validate" placeholder="Password">
+                     </div>
+                    <button type="button" id="btnGen" class="btn btn-primary" onclick="App.generateAccount();">Generate</button>
                   </div>
 
                   <div class="form-group row">
-                      <label class="col-sm-3 col-form-label" for="publicKey">Public Key</label>
+                      <label class="col-sm-3 col-form-label" for="publicKey">Address</label>
                       <div class="col-sm-9">
                          <input type="text" id="publicKey" class="form-control validate" placeholder="Public Key" readonly>
                       </div>
                   </div>
-                  <div class="form-group row">
-                      <label class="col-sm-3 col-form-label" for="privateKey">Private Key</label>
-                      <div class="col-sm-9">
-                         <textarea type="text" id="privateKey" class="form-control validate" placeholder="Private Key" readonly></textarea>
-                      </div>
-                  </div>
                   <div class="text-right">
                     <button type="reset" class="btn btn-primary">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="App.getInfoBalance();">Submit</button>
+                    <button type="button" id="btnSub" class="btn btn-primary" onclick="App.getInfoBalance();" disabled>Log In</button>
                   </div>
               </form>
                 <hr/>
