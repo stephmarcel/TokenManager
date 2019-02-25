@@ -22,7 +22,7 @@
       <div class="row">
         <div class="col-lg-12">
           <h1 class="text-center">TOKEN MANAGER</h1>
-
+          <a href="explorer.html"> Transaction History </a>
           <hr/>
           <div id="loader">
             <p id="accountAddress" class="text-center"></p>
@@ -31,8 +31,8 @@
           <div id="balanceInfo">
             <p id="accountBalance" class="text-center">  </p>
             <form id="formBtn" class="text-center">
-              <button type="button" class="btn btn-primary" onclick="App.receiveToken();" >Receive</button>
-              <button type="button" class="btn btn-primary" onclick="App.openformSend();">Send</button>
+              <button type="button" class="btn btn-primary" onclick="App.receiveToken();" id="btnRec">Receive</button>
+              <button type="button" class="btn btn-primary" onclick="App.openformSend();" id="btnSen">Send</button>
             </form>
           </div>
           <div>
@@ -76,45 +76,12 @@
                 </div>
               </div>
               <div class="text-right">
-                <button type="reset" class="btn btn-primary">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="App.getInfoBalance();">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="App.sendToken();">Send</button>
               </div>
             </form>
           </div>
 
-
-            <!-- <div class="modal fade" id="receiveToken" tabindex="-1" role="dialog" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Generate Account</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <form id="formReceiveToken">
-                      <div class="form-group row">
-                          <label class="col-sm-3 col-form-label" for="addressFrom"></label>
-                          <div class="col-sm-9">
-                             <input type="text" id="addressFrom" class="form-control validate" placeholder="Address">
-                          </div>
-                      </div>
-                      <div class="form-group row">
-                          <label class="col-sm-3 col-form-label" for="nbToken">Amount</label>
-                          <div class="col-sm-9">
-                             <input type="text" id="nbToken" class="form-control validate" placeholder="Amount">
-                          </div>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Receive</button>
-                  </div>
-                </div>
-              </div>
-              </div> -->
 
 
 
@@ -140,7 +107,7 @@
                   <div class="form-group row">
                       <label class="col-sm-3 col-form-label" for="publicKey">Address</label>
                       <div class="col-sm-9">
-                         <input type="text" id="publicKey" class="form-control validate" placeholder="Public Key" readonly>
+                         <input type="text" id="publicKey" class="form-control validate" placeholder="Public Key" onchange="$('#btnSub').prop('disabled', false);">
                       </div>
                   </div>
                   <div class="text-right">
@@ -149,6 +116,15 @@
                   </div>
               </form>
                 <hr/>
+                <div>
+                  <h3>What's new in Amaris Teams</h3>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br/>
+                    Pellentesque pellentesque eu leo nec laculis. Vestibulum tristique qui erat id fringilla. <br/>
+                    Ut in dolor odio. Nullam dui mi, posuere nec lectus at, feugiat mattis leo. <br/>
+                    Suspendisse eget commode lorem, accumsan laoreet enim.
+                  </p>
+                </div>
             </div>
           </div>
         </div>

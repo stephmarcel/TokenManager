@@ -4,6 +4,7 @@ App = {
   account: '0x0',
   position: '',
   pwd:'',
+  balance:0,
 
   init: function() {
     $("#loader").hide();
@@ -72,19 +73,27 @@ App = {
 sendToken: function(){
 
   var pass = $("#passwordsnd").val();
+  var balance = parseInt(App.balance);
   if (pass == App.pwd) {
+
     var to = $("#addressTo").val();
     var from = publicKey.value;
     var nbToken = $("#nbTokenS").val();
-    web3.personal.unlockAccount(from, pass, 1600);
-    App.contracts.AmaCoin.deployed().then(function(instance){
-      return instance.transfer( to, parseInt(nbToken), { from: from });
-    }).then(function(result){
-      alert('Transfert de token effectuée avec succès vers ' + to);
-      App.getInfoBalance();
-    }).catch(function(err) {
-      console.error(err);
-    });
+    if (nbToken <= balance ) {
+        web3.personal.unlockAccount(from, pass, 1600);
+        App.contracts.AmaCoin.deployed().then(function(instance){
+          return instance.transfer( to, parseInt(nbToken), { from: from });
+        }).then(function(result){
+          alert('Transfert de token effectuée avec succès vers ' + to);
+          App.getInfoBalance();
+        }).catch(function(err) {
+          console.error(err);
+        });
+    }
+    else {
+      alert('Low Balance');
+    }
+
   }
 else {
   alert('Password Invalid!!');
@@ -136,7 +145,14 @@ getInfoBalance: function(){
         return instance.balanceOf(publicKey.value);
       }).then(function(balance){
         bal = parseInt(balance);
-        $("#accountBalance").html("<h3  class='text-center'>  Balance  </h3><br/>  <h1  class='text-center'>"+ bal +" A$  </h1><br/>");
+        $("#accountBalance").html("<h3  class='text-center'>  Balance  </h3><br/>  <h1  class='text-center'>"+ bal +" AmaCoin  </h1><br/>");
+        if (bal == 0) {
+          $("#btnSen").prop('disabled', true);
+        }
+        else {
+          $("#btnSen").prop('disabled', false);
+        }
+        App.balance = bal;
       }).catch(function(err) {
         console.error(err);
       });
@@ -149,6 +165,8 @@ getInfoBalance: function(){
 
       $("#loader").show();
       $("#balanceInfo").show();
+
+
 },
 
 receiveToken: function(){
