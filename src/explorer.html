@@ -24,13 +24,14 @@
           <h1 class="text-center">Transaction History</h1>
           <br/>
             <a href="index.html"> Home </a>
-              <table class="table table-hover table-sm">
+              <table class="table table-hover bordered table-sm">
                 <thead class="text-center">
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Hash</th>
                     <th scope="col">Address from</th>
                     <th scope="col">Address to</th>
+                    <th scope="col">Amount</th>
                     <th scope="col">Date </th>
                     <th scope="col">Timestamp</th>
                   </tr>
@@ -66,17 +67,20 @@
        var date = new Date(time*1000).toLocaleString();
        if (block.transactions != null) {
          var transactionHash = block.transactions[0];
-         var trans = web3.eth.getTransaction(transactionHash);
-         var from1 = trans.from;
-         var to1 = trans.to == null ? '' : trans.to;
-       }
-       else {
-         from = '';
+         var trans = web3.eth.getTransactionReceipt(transactionHash);
+         if (trans != null) {
+           var from1 = (trans.from != null) ? trans.from : '';
+           var to1 = (trans.to != null) ?  trans.to : '';
+           var nbtoken = (trans.logs != null && trans.logs.length != 0 ) ? parseInt(trans.logs[0].data,16) : '';
+         }
+
+        // var recpt = web3.eth.getTransactionReceipt(transactionHash);
+        // var nbtoken = (recpt != null && recpt.logs != null && recpt.logs.length != 0 ) ? parseInt(recpt.logs[0].data,16) : '';
        }
 
 
-       $('tbody').append("<tr><td>" + number + "</td><td>" + hash + "</td><td>" + from1 + "</td><td>" + to1
-         + "</td><td>" + date + "</td><td>" + time + "</td></tr>");
+       $('tbody').append("<tr><td>" + number + "</td><td>" + transactionHash + "</td><td>" + from1 + "</td><td>" + to1
+         + "</td><td>" + nbtoken  + "</td><td>" + date + "</td><td>" + time + "</td></tr>");
      }
    </script>
   </body>
